@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index"
   },
-  "author": "",
+  "author": "@ligebit",
   "license": "ISC",
   "dependencies": {
     "bignumber.js": "^9.0.0",
