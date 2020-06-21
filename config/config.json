@@ -1,0 +1,14 @@
+{
+    "HttpProvider": "https://mainnet.infura.io/v3/cc361a3606894bd987a9539934b762ac",
+    "WebsocketProvider": "wss://mainnet.infura.io/ws/v3/cc361a3606894bd987a9539934b762ac",
+    "apiUrlEtherscanGetAbi": "https://api.etherscan.io/api?module=contract&action=getabi&address=",
+    "contractAddressMesa": "0x6F400810b62df8E13fded51bE75fF5393eaa841F",
+    
+    "telegram": {
+        "token": "1197177771:AAFbc_mgkJEAojlYO-WAzp6pF9QeWg_kMxA",
+        "api": "https://api.telegram.org/bot",
+        "username": "@ligebittest"
+    },
+
+    "whitelistTokens": ["0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"]
+}
