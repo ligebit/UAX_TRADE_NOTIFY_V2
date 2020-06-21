@@ -7,8 +7,8 @@
     "telegram": {
         "token": "1197177771:AAFbc_mgkJEAojlYO-WAzp6pF9QeWg_kMxA",
         "api": "https://api.telegram.org/bot",
-        "username": "@ligebittest"
+        "username": "@uaxtradenotify"
     },
 
-    "whitelistTokens": ["0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"]
+    "whitelistTokens": ["0x1fc31488f28ac846588ffa201cde0669168471bd"]
 }
