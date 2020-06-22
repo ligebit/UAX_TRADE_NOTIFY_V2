@@ -15,11 +15,11 @@ const server = http.createServer((request, response) => {
 })
 
 function dontSleep() {
-    request("https://api.ethplorer.io/getTokenInfo/", () => {
+    request("https://uax-bot-notify-v2.herokuapp.com", () => {
         console.log('Не спать');
     });
 }
 
-SetInterval(dontSleep, 1000*60*25);
+setInterval(dontSleep, 1000*60*25);
 
 /*--- --- ---- ---*/
