@@ -15,11 +15,11 @@ const server = http.createServer((request, response) => {
 })
 
 function dontSleep() {
-    request("https://uax-bot-notify-v2.herokuapp.com", () => {
+    request("https://uax-bot-notify-v2.herokuapp.com/", () => {
         console.log('Не спать');
     });
 }
 
-setInterval(dontSleep, 1000*60*25);
+setInterval(dontSleep, 1000*60*10);
 
 /*--- --- ---- ---*/
