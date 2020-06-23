@@ -89,7 +89,7 @@ class BOT {
         let buyToken = await contract.methods.tokenIdToAddressMap(eventObj.buyToken).call();
         let sellToken = await contract.methods.tokenIdToAddressMap(eventObj.sellToken).call();
 
-        //Если токен есть вайтлист массиве
+        //Если токен есть в вайтлист массиве
         if(this.config.whitelistTokens.includes(buyToken) || this.config.whitelistTokens.includes(sellToken)) {
     
             //Запрос информации об buyToken токене(тикер, количество знаков после запятой и т.д.)
