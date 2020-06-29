@@ -7,6 +7,7 @@ class BOT {
 
     constructor() {
         this.config = require('../config/config.json');
+        this.tokens = require('../config/tokens.json');
 
         this.web3http = new Web3(this.config.HttpProvider);
 
@@ -92,30 +93,52 @@ class BOT {
         //Если токен есть в вайтлист массиве
         if(this.config.whitelistTokens.includes(buyToken) || this.config.whitelistTokens.includes(sellToken)) {
     
-            //Запрос информации об buyToken токене(тикер, количество знаков после запятой и т.д.)
-            request("https://api.ethplorer.io/getTokenInfo/" + buyToken + "?apiKey=freekey", (error, response, buyTokenInfo) => {
-                buyTokenInfo = JSON.parse(buyTokenInfo);
-        
-                //Запрос информации об sellToken токене(тикер, количество знаков после запятой и т.д.)
-                request("https://api.ethplorer.io/getTokenInfo/" + sellToken + "?apiKey=freekey", (error, response, sellTokenInfo) => {
-                    sellTokenInfo = JSON.parse(sellTokenInfo);
-        
-                    //Получаем цены
-                    let priceBuy = this.calculatePrice(eventObj.executedBuyAmount, buyTokenInfo.decimals, eventObj.executedSellAmount, sellTokenInfo.decimals).toString();
-                    let priceSell = this.calculatePrice(eventObj.executedSellAmount, sellTokenInfo.decimals, eventObj.executedBuyAmount, buyTokenInfo.decimals).toString();
 
-                    //Отправляем информацию в телеграм чат
-                    this.sendMessageTelegramBot(this.config.telegram.username, `
+            if(this.tokens[buyToken] && this.tokens[sellToken]) {
+
+                buyTokenInfo = this.tokens[buyToken];
+                sellTokenInfo = this.tokens[sellToken];
+
+                //Получаем цены
+                let priceBuy = this.calculatePrice(eventObj.executedBuyAmount, buyTokenInfo.decimals, eventObj.executedSellAmount, sellTokenInfo.decimals).toString();
+                let priceSell = this.calculatePrice(eventObj.executedSellAmount, sellTokenInfo.decimals, eventObj.executedBuyAmount, buyTokenInfo.decimals).toString();
+
+                //Отправляем информацию в телеграм чат
+                this.sendMessageTelegramBot(this.config.telegram.username, `
 ✅Успешный обмен
 
 <code>${eventObj.executedSellAmount/(Math.pow(10, Number(sellTokenInfo.decimals)))}</code> ${sellTokenInfo.symbol} → <code>${eventObj.executedBuyAmount/(Math.pow(10, Number(buyTokenInfo.decimals)))}</code> ${buyTokenInfo.symbol}
 
 <a href = "https://etherscan.io/address/${eventObj.owner}">💼${eventObj.owner.substring(0, 5)}...${eventObj.owner.substring(37, 42)}</a>
 <a href = "https://etherscan.io/tx/${transactionHash}">🏷️Транзакция</a>`);
+
+            } else {
+
+                //Запрос информации об buyToken токене(тикер, количество знаков после запятой и т.д.)
+                request("https://api.ethplorer.io/getTokenInfo/" + buyToken + "?apiKey=freekey", (error, response, buyTokenInfo) => {
+                    buyTokenInfo = JSON.parse(buyTokenInfo);
             
-        
+                    //Запрос информации об sellToken токене(тикер, количество знаков после запятой и т.д.)
+                    request("https://api.ethplorer.io/getTokenInfo/" + sellToken + "?apiKey=freekey", (error, response, sellTokenInfo) => {
+                        sellTokenInfo = JSON.parse(sellTokenInfo);
+            
+                        //Получаем цены
+                        let priceBuy = this.calculatePrice(eventObj.executedBuyAmount, buyTokenInfo.decimals, eventObj.executedSellAmount, sellTokenInfo.decimals).toString();
+                        let priceSell = this.calculatePrice(eventObj.executedSellAmount, sellTokenInfo.decimals, eventObj.executedBuyAmount, buyTokenInfo.decimals).toString();
+
+                        //Отправляем информацию в телеграм чат
+                        this.sendMessageTelegramBot(this.config.telegram.username, `
+    ✅Успешный обмен
+
+    <code>${eventObj.executedSellAmount/(Math.pow(10, Number(sellTokenInfo.decimals)))}</code> ${sellTokenInfo.symbol} → <code>${eventObj.executedBuyAmount/(Math.pow(10, Number(buyTokenInfo.decimals)))}</code> ${buyTokenInfo.symbol}
+
+    <a href = "https://etherscan.io/address/${eventObj.owner}">💼${eventObj.owner.substring(0, 5)}...${eventObj.owner.substring(37, 42)}</a>
+    <a href = "https://etherscan.io/tx/${transactionHash}">🏷️Транзакция</a>`);
+                
+            
+                    });
                 });
-            });
+            }
         }
     }
 
@@ -153,29 +176,54 @@ class BOT {
 
         if(this.config.whitelistTokens.includes(buyToken) || this.config.whitelistTokens.includes(sellToken)) {
 
-            request("https://api.ethplorer.io/getTokenInfo/" + buyToken + "?apiKey=freekey", (error, response, buyTokenInfo) => {
-                buyTokenInfo = JSON.parse(buyTokenInfo);
 
-                request("https://api.ethplorer.io/getTokenInfo/" + sellToken + "?apiKey=freekey", (error, response, sellTokenInfo) => {
-                    sellTokenInfo = JSON.parse(sellTokenInfo);
+            if(this.tokens[buyToken] && this.tokens[sellToken]) {
 
-                        let priceBuy = this.calculatePrice(eventObj.priceNumerator, buyTokenInfo.decimals, eventObj.priceDenominator, sellTokenInfo.decimals).toString();
-                        let priceSell = this.calculatePrice(eventObj.priceDenominator, sellTokenInfo.decimals, eventObj.priceNumerator, buyTokenInfo.decimals).toString();
+                buyTokenInfo = this.tokens[buyToken];
+                sellTokenInfo = this.tokens[sellToken];
 
-                        this.sendMessageTelegramBot(this.config.telegram.username, `
-📃Новый ордер
 
-<code>${eventObj.priceDenominator/(Math.pow(10, Number(sellTokenInfo.decimals)))}</code> ${sellTokenInfo.symbol} → <code>${eventObj.priceNumerator/(Math.pow(10, Number(buyTokenInfo.decimals)))}</code> ${buyTokenInfo.symbol}
+                let priceBuy = this.calculatePrice(eventObj.priceNumerator, buyTokenInfo.decimals, eventObj.priceDenominator, sellTokenInfo.decimals).toString();
+                            let priceSell = this.calculatePrice(eventObj.priceDenominator, sellTokenInfo.decimals, eventObj.priceNumerator, buyTokenInfo.decimals).toString();
 
-1 ${sellTokenInfo.symbol} = <code>${priceBuy}</code> ${buyTokenInfo.symbol}
-1 ${buyTokenInfo.symbol} = <code>${priceSell}</code> ${sellTokenInfo.symbol}
+                            this.sendMessageTelegramBot(this.config.telegram.username, `
+    📃Новый ордер
 
-<a href = "https://etherscan.io/address/${eventObj.owner}">💼${eventObj.owner.substring(0, 5)}...${eventObj.owner.substring(37, 42)}</a>
-<a href = "https://etherscan.io/tx/${transactionHash}">🏷️Транзакция</a>`);
+    <code>${eventObj.priceDenominator/(Math.pow(10, Number(sellTokenInfo.decimals)))}</code> ${sellTokenInfo.symbol} → <code>${eventObj.priceNumerator/(Math.pow(10, Number(buyTokenInfo.decimals)))}</code> ${buyTokenInfo.symbol}
+
+    1 ${sellTokenInfo.symbol} = <code>${priceBuy}</code> ${buyTokenInfo.symbol}
+    1 ${buyTokenInfo.symbol} = <code>${priceSell}</code> ${sellTokenInfo.symbol}
+
+    <a href = "https://etherscan.io/address/${eventObj.owner}">💼${eventObj.owner.substring(0, 5)}...${eventObj.owner.substring(37, 42)}</a>
+    <a href = "https://etherscan.io/tx/${transactionHash}">🏷️Транзакция</a>`);
+                
+
+            } else {
+
+                request("https://api.ethplorer.io/getTokenInfo/" + buyToken + "?apiKey=freekey", (error, response, buyTokenInfo) => {
+                    buyTokenInfo = JSON.parse(buyTokenInfo);
+
+                    request("https://api.ethplorer.io/getTokenInfo/" + sellToken + "?apiKey=freekey", (error, response, sellTokenInfo) => {
+                        sellTokenInfo = JSON.parse(sellTokenInfo);
+
+                            let priceBuy = this.calculatePrice(eventObj.priceNumerator, buyTokenInfo.decimals, eventObj.priceDenominator, sellTokenInfo.decimals).toString();
+                            let priceSell = this.calculatePrice(eventObj.priceDenominator, sellTokenInfo.decimals, eventObj.priceNumerator, buyTokenInfo.decimals).toString();
+
+                            this.sendMessageTelegramBot(this.config.telegram.username, `
+    📃Новый ордер
+
+    <code>${eventObj.priceDenominator/(Math.pow(10, Number(sellTokenInfo.decimals)))}</code> ${sellTokenInfo.symbol} → <code>${eventObj.priceNumerator/(Math.pow(10, Number(buyTokenInfo.decimals)))}</code> ${buyTokenInfo.symbol}
+
+    1 ${sellTokenInfo.symbol} = <code>${priceBuy}</code> ${buyTokenInfo.symbol}
+    1 ${buyTokenInfo.symbol} = <code>${priceSell}</code> ${sellTokenInfo.symbol}
+
+    <a href = "https://etherscan.io/address/${eventObj.owner}">💼${eventObj.owner.substring(0, 5)}...${eventObj.owner.substring(37, 42)}</a>
+    <a href = "https://etherscan.io/tx/${transactionHash}">🏷️Транзакция</a>`);
+                
             
-        
-                });
-            }); 
+                    });
+                }); 
+            }
         }  
     }
 
