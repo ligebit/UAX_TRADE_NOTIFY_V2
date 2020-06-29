@@ -90,6 +90,9 @@ class BOT {
         let buyToken = await contract.methods.tokenIdToAddressMap(eventObj.buyToken).call();
         let sellToken = await contract.methods.tokenIdToAddressMap(eventObj.sellToken).call();
 
+        console.log(buyToken);
+        console.log(sellToken);
+
         //Если токен есть в вайтлист массиве
         if(this.config.whitelistTokens.includes(buyToken) || this.config.whitelistTokens.includes(sellToken)) {
     
@@ -128,12 +131,12 @@ class BOT {
 
                         //Отправляем информацию в телеграм чат
                         this.sendMessageTelegramBot(this.config.telegram.username, `
-    ✅Успешный обмен
+✅Успешный обмен
 
-    <code>${eventObj.executedSellAmount/(Math.pow(10, Number(sellTokenInfo.decimals)))}</code> ${sellTokenInfo.symbol} → <code>${eventObj.executedBuyAmount/(Math.pow(10, Number(buyTokenInfo.decimals)))}</code> ${buyTokenInfo.symbol}
+<code>${eventObj.executedSellAmount/(Math.pow(10, Number(sellTokenInfo.decimals)))}</code> ${sellTokenInfo.symbol} → <code>${eventObj.executedBuyAmount/(Math.pow(10, Number(buyTokenInfo.decimals)))}</code> ${buyTokenInfo.symbol}
 
-    <a href = "https://etherscan.io/address/${eventObj.owner}">💼${eventObj.owner.substring(0, 5)}...${eventObj.owner.substring(37, 42)}</a>
-    <a href = "https://etherscan.io/tx/${transactionHash}">🏷️Транзакция</a>`);
+<a href = "https://etherscan.io/address/${eventObj.owner}">💼${eventObj.owner.substring(0, 5)}...${eventObj.owner.substring(37, 42)}</a>
+<a href = "https://etherscan.io/tx/${transactionHash}">🏷️Транзакция</a>`);
                 
             
                     });
@@ -174,6 +177,9 @@ class BOT {
         let buyToken = await contract.methods.tokenIdToAddressMap(eventObj.buyToken).call();
         let sellToken = await contract.methods.tokenIdToAddressMap(eventObj.sellToken).call();
 
+        console.log(buyToken);
+        console.log(sellToken);
+
         if(this.config.whitelistTokens.includes(buyToken) || this.config.whitelistTokens.includes(sellToken)) {
 
 
@@ -187,15 +193,15 @@ class BOT {
                             let priceSell = this.calculatePrice(eventObj.priceDenominator, sellTokenInfo.decimals, eventObj.priceNumerator, buyTokenInfo.decimals).toString();
 
                             this.sendMessageTelegramBot(this.config.telegram.username, `
-    📃Новый ордер
+📃Новый ордер
 
-    <code>${eventObj.priceDenominator/(Math.pow(10, Number(sellTokenInfo.decimals)))}</code> ${sellTokenInfo.symbol} → <code>${eventObj.priceNumerator/(Math.pow(10, Number(buyTokenInfo.decimals)))}</code> ${buyTokenInfo.symbol}
+<code>${eventObj.priceDenominator/(Math.pow(10, Number(sellTokenInfo.decimals)))}</code> ${sellTokenInfo.symbol} → <code>${eventObj.priceNumerator/(Math.pow(10, Number(buyTokenInfo.decimals)))}</code> ${buyTokenInfo.symbol}
 
-    1 ${sellTokenInfo.symbol} = <code>${priceBuy}</code> ${buyTokenInfo.symbol}
-    1 ${buyTokenInfo.symbol} = <code>${priceSell}</code> ${sellTokenInfo.symbol}
+1 ${sellTokenInfo.symbol} = <code>${priceBuy}</code> ${buyTokenInfo.symbol}
+1 ${buyTokenInfo.symbol} = <code>${priceSell}</code> ${sellTokenInfo.symbol}
 
-    <a href = "https://etherscan.io/address/${eventObj.owner}">💼${eventObj.owner.substring(0, 5)}...${eventObj.owner.substring(37, 42)}</a>
-    <a href = "https://etherscan.io/tx/${transactionHash}">🏷️Транзакция</a>`);
+<a href = "https://etherscan.io/address/${eventObj.owner}">💼${eventObj.owner.substring(0, 5)}...${eventObj.owner.substring(37, 42)}</a>
+<a href = "https://etherscan.io/tx/${transactionHash}">🏷️Транзакция</a>`);
                 
 
             } else {
@@ -210,15 +216,15 @@ class BOT {
                             let priceSell = this.calculatePrice(eventObj.priceDenominator, sellTokenInfo.decimals, eventObj.priceNumerator, buyTokenInfo.decimals).toString();
 
                             this.sendMessageTelegramBot(this.config.telegram.username, `
-    📃Новый ордер
+📃Новый ордер
 
-    <code>${eventObj.priceDenominator/(Math.pow(10, Number(sellTokenInfo.decimals)))}</code> ${sellTokenInfo.symbol} → <code>${eventObj.priceNumerator/(Math.pow(10, Number(buyTokenInfo.decimals)))}</code> ${buyTokenInfo.symbol}
+<code>${eventObj.priceDenominator/(Math.pow(10, Number(sellTokenInfo.decimals)))}</code> ${sellTokenInfo.symbol} → <code>${eventObj.priceNumerator/(Math.pow(10, Number(buyTokenInfo.decimals)))}</code> ${buyTokenInfo.symbol}
 
-    1 ${sellTokenInfo.symbol} = <code>${priceBuy}</code> ${buyTokenInfo.symbol}
-    1 ${buyTokenInfo.symbol} = <code>${priceSell}</code> ${sellTokenInfo.symbol}
+1 ${sellTokenInfo.symbol} = <code>${priceBuy}</code> ${buyTokenInfo.symbol}
+1 ${buyTokenInfo.symbol} = <code>${priceSell}</code> ${sellTokenInfo.symbol}
 
-    <a href = "https://etherscan.io/address/${eventObj.owner}">💼${eventObj.owner.substring(0, 5)}...${eventObj.owner.substring(37, 42)}</a>
-    <a href = "https://etherscan.io/tx/${transactionHash}">🏷️Транзакция</a>`);
+<a href = "https://etherscan.io/address/${eventObj.owner}">💼${eventObj.owner.substring(0, 5)}...${eventObj.owner.substring(37, 42)}</a>
+<a href = "https://etherscan.io/tx/${transactionHash}">🏷️Транзакция</a>`);
                 
             
                     });
