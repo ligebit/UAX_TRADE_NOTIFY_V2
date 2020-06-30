@@ -99,8 +99,8 @@ class BOT {
 
             if(this.tokens[buyToken] && this.tokens[sellToken]) {
 
-                buyTokenInfo = this.tokens[buyToken];
-                sellTokenInfo = this.tokens[sellToken];
+                let buyTokenInfo = this.tokens[buyToken];
+                let sellTokenInfo = this.tokens[sellToken];
 
                 //Получаем цены
                 let priceBuy = this.calculatePrice(eventObj.executedBuyAmount, buyTokenInfo.decimals, eventObj.executedSellAmount, sellTokenInfo.decimals).toString();
@@ -185,8 +185,8 @@ class BOT {
 
             if(this.tokens[buyToken] && this.tokens[sellToken]) {
 
-                buyTokenInfo = this.tokens[buyToken];
-                sellTokenInfo = this.tokens[sellToken];
+                let buyTokenInfo = this.tokens[buyToken];
+                let sellTokenInfo = this.tokens[sellToken];
 
 
                 let priceBuy = this.calculatePrice(eventObj.priceNumerator, buyTokenInfo.decimals, eventObj.priceDenominator, sellTokenInfo.decimals).toString();
